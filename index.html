@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Évaluation Économique de Projets Miniers - Métaux de Base</title>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #2e86c1;
+            --background-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-color: #dddddd;
+            --tab-active: #2e86c1;
+            --tab-inactive: #e8e8e8;
+            --tab-hover: #bbd5e7;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        h3 {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: var(--primary-color);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-color);
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-color);
+        }
+        
+        .result-section {
+            margin-top: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .chart-container {
+            width: 100%;
+            margin: 25px 0;
+            height: 400px;
+        }
+        
+        .charts-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .chart-box {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .summary-box {
+            background-color: #e8f4f8;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .summary-box h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .calculated-field {
+            background-color: #f8f8f8;
+            color: #777;
+            cursor: not-allowed;
+        }
+        
+        .info-icon {
+            cursor: help;
+            margin-left: 5px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--secondary-color);
+            gap: 5px;
+        }
+        
+        .tab {
+            padding: 14px 24px;
+            cursor: pointer;
+            background-color: var(--tab-inactive);
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 1.05rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .tab:hover {
+            background-color: var(--tab-hover);
+        }
+        
+        .tab.active {
+            background-color: var(--tab-active);
+            color: white;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            z-index: 1;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--tab-active);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab i {
+            font-size: 1.2rem;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.3rem;
+            }
+            
+            .chart-box {
+                min-width: 100%;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                border-bottom: none;
+                gap: 8px;
+            }
+            
+            .tab {
+                border-radius: 8px;
+                margin-bottom: 0;
+                padding: 12px 15px;
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .tab.active {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Évaluation Économique de Projets Miniers à Ciel Ouvert</h1>
+        <div class="subtitle">Cas des Métaux de Bases</div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <h2>Données d'entrée du projet</h2>
+            
+            <div class="section-title">Données de base</div>
+            <div class="input-group">
+                <div>
+                    <label for="nom-minerai">Commodité</label>
+                    <input type="text" id="nom-minerai" placeholder="Ex: Cuivre, Zinc, Plomb..." required>
+                </div>
+                <div class="tooltip">
+                    <label for="prix-metal">Prix du métal (USD/tonne)</label>
+                    <span class="tooltiptext">Prix de marché du métal pur</span>
+                    <input type="number" id="prix-metal" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label for="duree-projet">Durée du projet (années)</label>
+                    <input type="number" id="duree-projet" min="1" max="50" required>
+                </div>
+                <div>
+                    <label for="investissement-initial">Investissement initial (USD)</label>
+                    <input type="number" id="investissement-initial" min="0" required>
+                </div>
+            </div>
+            
+            <div class="section-title">Paramètres techniques</div>
+            <div class="input-group">
+                <div class="tooltip">
+                    <label for="teneur-minerai">Teneur du minerai (%)</label>
+                    <span class="tooltiptext">Concentration du métal dans le minerai extrait</span>
+                    <input type="number" id="teneur-minerai" min="0" max="100" step="0.01" required>
+                </div>
+                <div class="tooltip">
+                    <label for="teneur-concentre">Teneur du concentré (%)</label>
+                    <span class="tooltiptext">Concentration du métal dans le produit après traitement</span>
+                    <input type="number" id="teneur-concentre" min="0" max="100" step="0.01" required>
+                </div>
+                <div class="tooltip">
+                    <label for="ratio-sterile">Ratio stérile/minerai</label>
+                    <span class="tooltiptext">Rapport entre la quantité de stérile et la quantité de minerai</span>
+                    <input type="number" id="ratio-sterile" min="0" step="0.1" required>
+                </div>
+                <div class="tooltip">
+                    <label for="production-tout-venant">Production annuelle tout venant (tonnes)</label>
+                    <span class="tooltiptext">Quantité totale de matériau extrait (minerai + stérile)</span>
+                    <input type="number" id="production-tout-venant" min="0" required>
+                </div>
+                <div class="tooltip">
+                    <label for="production-minerai">Production annuelle de minerai (tonnes)</label>
+                    <span class="tooltiptext">Calculé automatiquement à partir du ratio stérile/minerai</span>
+                    <input type="number" id="production-minerai" class="calculated-field" readonly>
+                </div>
+                <div class="tooltip">
+                    <label for="facteur-concentration">Facteur de concentration</label>
+                    <span class="tooltiptext">Rapport entre la teneur du concentré et la teneur du minerai</span>
+                    <input type="number" id="facteur-concentration" class="calculated-field" readonly>
+                </div>
+                <div class="tooltip">
+                    <label for="production-concentre">Production annuelle de concentré (tonnes)</label>
+                    <span class="tooltiptext">Calculé automatiquement à partir du facteur de concentration</span>
+                    <input type="number" id="production-concentre" class="calculated-field" readonly>
+                </div>
+                <div class="tooltip">
+                    <label for="production-metal">Contenu Métal Annuel (tonnes)</label>
+                    <span class="tooltiptext">Quantité de métal pur produite annuellement</span>
+                    <input type="number" id="production-metal" class="calculated-field" readonly>
+                </div>
+            </div>
+            
+            <div class="section-title">Paramètres économiques</div>
+            <div class="input-group">
+                <div>
+                    <label for="cout-extraction">Coût d'extraction du minerai (USD/tonne)</label>
+                    <input type="number" id="cout-extraction" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label for="cout-production">Coût de production du concentré (USD/tonne)</label>
+                    <input type="number" id="cout-production" min="0" step="0.01" required>
+                </div>
+                <div>
+                    <label for="taux-actualisation">Taux d'actualisation (%)</label>
+                    <input type="number" id="taux-actualisation" min="0" max="100" step="0.1" required>
+                </div>
+                <div>
+                    <label for="taux-imposition">Taux d'imposition (%)</label>
+                    <input type="number" id="taux-imposition" min="0" max="100" step="0.1" required>
+                </div>
+                <div>
+                    <label for="amortissement">Durée d'amortissement (années)</label>
+                    <input type="number" id="amortissement" min="1" max="30" required>
+                </div>
+                <div>
+                    <label for="taux-royalty">Taux de royalty (%)</label>
+                    <input type="number" id="taux-royalty" min="0" max="100" step="0.1" required>
+                </div>
+                <div>
+                    <label for="participation-etat">Participation gratuite étatique (%)</label>
+                    <input type="number" id="participation-etat" min="0" max="100" step="0.1" required>
+                </div>
+            </div>
+            <button id="calculer">Calculer</button>
+        </div>
+        
+        <div class="card result-section" id="resultats" style="display: none;">
+            <h2>Résultats de l'analyse économique</h2>
+            
+            <div class="tabs">
+                <button class="tab active" data-tab="production">
+                    <i class="fas fa-industry"></i> Production Minière
+                </button>
+                <button class="tab" data-tab="flux-tresorerie">
+                    <i class="fas fa-table"></i> Flux de Trésorerie
+                </button>
+                <button class="tab" data-tab="indicateurs">
+                    <i class="fas fa-chart-line"></i> Indicateurs Financiers
+                </button>
+                <button class="tab" data-tab="repartition">
+                    <i class="fas fa-chart-pie"></i> Répartition de la Rente
+                </button>
+                <button class="tab" data-tab="graphiques">
+                    <i class="fas fa-chart-bar"></i> Graphiques d'Analyse
+                </button>
+            </div>
+            
+            <div id="production" class="tab-content active">
+                <h3>Données de production</h3>
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span>Production annuelle tout venant:</span>
+                        <span class="summary-value" id="prod-tout-venant-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Ratio stérile/minerai:</span>
+                        <span class="summary-value" id="ratio-sterile-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Production annuelle de minerai:</span>
+                        <span class="summary-value" id="prod-minerai-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Teneur du minerai:</span>
+                        <span class="summary-value" id="teneur-minerai-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Teneur du concentré:</span>
+                        <span class="summary-value" id="teneur-concentre-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Facteur de concentration:</span>
+                        <span class="summary-value" id="facteur-concentration-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Production annuelle de concentré:</span>
+                        <span class="summary-value" id="prod-concentre-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Contenu Métal Annuel:</span>
+                        <span class="summary-value" id="prod-metal-value">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="flux-tresorerie" class="tab-content">
+                <h3>Tableau des flux de trésorerie (en USD)</h3>
+                <div style="overflow-x: auto;">
+                    <table id="tableau-flux">
+                        <thead>
+                            <tr>
+                                <th>Année</th>
+                                <th>Recettes</th>
+                                <th>Dépenses</th>
+                                <th>Amortissement</th>
+                                <th>Royalties</th>
+                                <th>Bénéfice brut</th>
+                                <th>Impôts</th>
+                                <th>Bénéfice net</th>
+                                <th>Flux de trésorerie</th>
+                                <th>Flux actualisé</th>
+                                <th>Flux cumulé</th>
+                            </tr>
+                        </thead>
+                        <tbody id="flux-data">
+                            <!-- Tableau généré dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div id="indicateurs" class="tab-content">
+                <div class="summary-box">
+                    <h3>Indicateurs financiers clés</h3>
+                    <div class="summary-item">
+                        <span>Valeur Actuelle Nette (VAN):</span>
+                        <span class="summary-value" id="van-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Taux de Rendement Interne (TRI):</span>
+                        <span class="summary-value" id="tri-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Délai de Récupération:</span>
+                        <span class="summary-value" id="delai-value">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Ratio Bénéfice/Coût:</span>
+                        <span class="summary-value" id="ratio-value">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="repartition" class="tab-content">
+                <div class="summary-box">
+                    <h3>Répartition de la rente minière</h3>
+                    <div class="summary-item">
+                        <span>Part de l'État (Taxes + Royalties + Participation):</span>
+                        <span class="summary-value" id="part-etat">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Part des actionnaires privés:</span>
+                        <span class="summary-value" id="part-prive">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Ratio de répartition (État/Privé):</span>
+                        <span class="summary-value" id="ratio-repartition">-</span>
+                    </div>
+                </div>
+                
+                <div class="charts-flex">
+                    <div class="chart-box">
+                        <h3>Répartition État vs Privé</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-repartition"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Détail des revenus de l'État</h3>
+                        <div class="chart-container">
+                            <canvas id="chart-detail-etat"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="graphiques" class="tab-content">
+                <h3>Évolution des flux de trésorerie</h3>
+                <div class="chart-container">
+                    <canvas id="chart-flux"></canvas>
+                </div>
+                <h3>Évolution du flux cumulé</h3>
+                <div class="chart-container">
+                    <canvas id="chart-cumule"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Références aux éléments de calcul automatique
+            const inputTeneurMinerai = document.getElementById('teneur-minerai');
+            const inputTeneurConcentre = document.getElementById('teneur-concentre');
+            const inputRatioSterile = document.getElementById('ratio-sterile');
+            const inputProductionToutVenant = document.getElementById('production-tout-venant');
+            const inputProductionMinerai = document.getElementById('production-minerai');
+            const inputFacteurConcentration = document.getElementById('facteur-concentration');
+            const inputProductionConcentre = document.getElementById('production-concentre');
+            const inputProductionMetal = document.getElementById('production-metal');
+            
+            // Calcul automatique des valeurs techniques
+            function calculerParametresTechniques() {
+                const teneurMinerai = parseFloat(inputTeneurMinerai.value) || 0;
+                const teneurConcentre = parseFloat(inputTeneurConcentre.value) || 0;
+                const ratioSterile = parseFloat(inputRatioSterile.value) || 0;
+                const productionToutVenant = parseFloat(inputProductionToutVenant.value) || 0;
+                
+                // Calcul de la production annuelle de minerai
+                const productionMinerai = productionToutVenant / (ratioSterile + 1);
+                
+                // Calcul du facteur de concentration
+                const facteurConcentration = teneurMinerai > 0 ? teneurConcentre / teneurMinerai : 0;
+                
+                // Calcul de la production annuelle de concentré
+                const productionConcentre = productionMinerai / facteurConcentration;
+                
+                // Calcul du contenu métal annuel
+                const productionMetal = productionConcentre * (teneurConcentre / 100);
+                
+                // Mise à jour des champs calculés
+                inputProductionMinerai.value = productionMinerai.toFixed(2);
+                inputFacteurConcentration.value = facteurConcentration.toFixed(2);
+                inputProductionConcentre.value = productionConcentre.toFixed(2);
+                inputProductionMetal.value = productionMetal.toFixed(2);
+            }
+            
+            // Ajouter des écouteurs d'événements pour les calculs automatiques
+            inputTeneurMinerai.addEventListener('input', calculerParametresTechniques);
+            inputTeneurConcentre.addEventListener('input', calculerParametresTechniques);
+            inputRatioSterile.addEventListener('input', calculerParametresTechniques);
+            inputProductionToutVenant.addEventListener('input', calculerParametresTechniques);
+            
+            // Gestion des onglets
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.dataset.tab;
+                    
+                    // Activer l'onglet courant
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Afficher le contenu correspondant
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Lancer le calcul
+            document.getElementById('calculer').addEventListener('click', calculerProjet);
+            
+            // Fonction principale de calcul
+            function calculerProjet() {
+                // Recalculer les paramètres techniques pour s'assurer qu'ils sont à jour
+                calculerParametresTechniques();
+                
+                // Récupération des données d'entrée
+                const nomMinerai = document.getElementById('nom-minerai').value;
+                const prixMetal = parseFloat(document.getElementById('prix-metal').value);
+                const coutExtraction = parseFloat(document.getElementById('cout-extraction').value);
+                const coutProduction = parseFloat(document.getElementById('cout-production').value);
+                const dureeProjet = parseInt(document.getElementById('duree-projet').value);
+                const investissementInitial = parseFloat(document.getElementById('investissement-initial').value);
+                const tauxActualisation = parseFloat(document.getElementById('taux-actualisation').value) / 100;
+                const tauxImposition = parseFloat(document.getElementById('taux-imposition').value) / 100;
+                const dureeAmortissement = parseInt(document.getElementById('amortissement').value);
+                const tauxRoyalty = parseFloat(document.getElementById('taux-royalty').value) / 100;
+                const participationEtat = parseFloat(document.getElementById('participation-etat').value) / 100;
+                
+                // Récupération des données techniques calculées
+                const teneurMinerai = parseFloat(inputTeneurMinerai.value);
+                const teneurConcentre = parseFloat(inputTeneurConcentre.value);
+                const ratioSterile = parseFloat(inputRatioSterile.value);
+                const productionToutVenant = parseFloat(inputProductionToutVenant.value);
+                const productionMinerai = parseFloat(inputProductionMinerai.value);
+                const facteurConcentration = parseFloat(inputFacteurConcentration.value);
+                const productionConcentre = parseFloat(inputProductionConcentre.value);
+                const productionMetal = parseFloat(inputProductionMetal.value);
+                
+                // Vérifier si toutes les données sont complètes
+                if (!nomMinerai || isNaN(prixMetal) || isNaN(coutExtraction) || isNaN(coutProduction) || 
+                    isNaN(dureeProjet) || isNaN(investissementInitial) || isNaN(tauxActualisation) || 
+                    isNaN(tauxImposition) || isNaN(dureeAmortissement) || isNaN(tauxRoyalty) || 
+                    isNaN(participationEtat) || isNaN(teneurMinerai) || isNaN(teneurConcentre) || 
+                    isNaN(ratioSterile) || isNaN(productionToutVenant)) {
+                    alert("Veuillez remplir tous les champs correctement.");
+                    return;
+                }
+                
+                // Initialisation des tableaux pour stocker les données annuelles
+                const annees = [];
+                const recettes = [];
+                const depenses = [];
+                const amortissements = [];
+                const royalties = [];
+                const beneficesBruts = [];
+                const impots = [];
+                const beneficesNets = [];
+                const fluxTresorerie = [];
+                const fluxActualises = [];
+                const fluxCumules = [];
+                
+                // Calcul de l'amortissement annuel
+                const amortissementAnnuel = investissementInitial / dureeAmortissement;
+                
+                // Calcul des flux de trésorerie pour chaque année
+                let fluxCumule = -investissementInitial;
+                let sommeTotalFlux = 0;
+                let sommeFluxActualises = 0;
+                let sommeImpots = 0;
+                let sommeRoyalties = 0;
+                
+                // Année 0 (investissement initial)
+                annees.push(0);
+                recettes.push(0);
+                depenses.push(0);
+                amortissements.push(0);
+                royalties.push(0);
+                beneficesBruts.push(0);
+                impots.push(0);
+                beneficesNets.push(0);
+                fluxTresorerie.push(-investissementInitial);
+                fluxActualises.push(-investissementInitial);
+                fluxCumules.push(-investissementInitial);
+                
+                for (let annee = 1; annee <= dureeProjet; annee++) {
+                    // Calculs annuels
+                    const recetteAnnuelle = prixMetal * productionMetal;
+                    const depenseAnnuelle = (coutExtraction * productionMinerai) + (coutProduction * productionConcentre);
+                    const amortissementAnnee = annee <= dureeAmortissement ? amortissementAnnuel : 0;
+                    const royaltyAnnuelle = recetteAnnuelle * tauxRoyalty;
+                    const beneficeBrut = recetteAnnuelle - depenseAnnuelle - amortissementAnnee - royaltyAnnuelle;
+                    const impotAnnuel = Math.max(0, beneficeBrut * tauxImposition);
+                    const beneficeNet = beneficeBrut - impotAnnuel;
+                    const fluxAnnuel = beneficeNet + amortissementAnnee;
+                    const fluxActualise = fluxAnnuel / Math.pow(1 + tauxActualisation, annee);
+                    fluxCumule += fluxActualise;
+                    
+                    // Stockage des résultats
+                    annees.push(annee);
+                    recettes.push(recetteAnnuelle);
+                    depenses.push(depenseAnnuelle);
+                    amortissements.push(amortissementAnnee);
+                    royalties.push(royaltyAnnuelle);
+                    beneficesBruts.push(beneficeBrut);
+                    impots.push(impotAnnuel);
+                    beneficesNets.push(beneficeNet);
+                    fluxTresorerie.push(fluxAnnuel);
+                    fluxActualises.push(fluxActualise);
+                    fluxCumules.push(fluxCumule);
+                    
+                    // Sommes pour les calculs de répartition
+                    sommeTotalFlux += fluxAnnuel;
+                    sommeFluxActualises += fluxActualise;
+                    sommeImpots += impotAnnuel;
+                    sommeRoyalties += royaltyAnnuelle;
+                }
+                
+                // Calcul des indicateurs financiers
+                const van = sommeFluxActualises - investissementInitial;
+                
+                // Calcul du TRI (méthode itérative)
+                let tri = calculateIRR(fluxTresorerie);
+                
+                // Calcul du délai de récupération
+                let delaiRecuperation = calculatePaybackPeriod(fluxActualises);
+                
+                // Calcul du ratio bénéfice/coût
+                const ratioBeneficeCout = (sommeFluxActualises + investissementInitial) / investissementInitial;
+                
+                // Calcul de la répartition de la rente minière
+                const participationEtatValeur = sommeTotalFlux * participationEtat;
+                const totalEtat = sommeImpots + sommeRoyalties + participationEtatValeur;
+                const totalPrive = sommeTotalFlux - totalEtat;
+                const ratioRepartition = totalEtat / totalPrive;
+                
+                // Affichage des résultats
+                document.getElementById('resultats').style.display = 'block';
+                
+                // Affichage des données de production
+                document.getElementById('prod-tout-venant-value').textContent = `${formatNumber(productionToutVenant)} tonnes`;
+                document.getElementById('ratio-sterile-value').textContent = ratioSterile.toFixed(2);
+                document.getElementById('prod-minerai-value').textContent = `${formatNumber(productionMinerai)} tonnes`;
+                document.getElementById('teneur-minerai-value').textContent = `${teneurMinerai.toFixed(2)}%`;
+                document.getElementById('teneur-concentre-value').textContent = `${teneurConcentre.toFixed(2)}%`;
+                document.getElementById('facteur-concentration-value').textContent = facteurConcentration.toFixed(2);
+                document.getElementById('prod-concentre-value').textContent = `${formatNumber(productionConcentre)} tonnes`;
+                document.getElementById('prod-metal-value').textContent = `${formatNumber(productionMetal)} tonnes`;
+                
+                // Remplir le tableau des flux
+                const tableBody = document.getElementById('flux-data');
+                tableBody.innerHTML = '';
+                
+                for (let i = 0; i < annees.length; i++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${annees[i]}</td>
+                        <td>${formatNumber(recettes[i])}</td>
+                        <td>${formatNumber(depenses[i])}</td>
+                        <td>${formatNumber(amortissements[i])}</td>
+                        <td>${formatNumber(royalties[i])}</td>
+                        <td>${formatNumber(beneficesBruts[i])}</td>
+                        <td>${formatNumber(impots[i])}</td>
+                        <td>${formatNumber(beneficesNets[i])}</td>
+                        <td>${formatNumber(fluxTresorerie[i])}</td>
+                        <td>${formatNumber(fluxActualises[i])}</td>
+                        <td>${formatNumber(fluxCumules[i])}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+                
+                // Afficher les indicateurs financiers
+                document.getElementById('van-value').textContent = `${formatNumber(van)} USD`;
+                document.getElementById('tri-value').textContent = `${(tri * 100).toFixed(2)}%`;
+                document.getElementById('delai-value').textContent = `${delaiRecuperation.toFixed(2)} années`;
+                document.getElementById('ratio-value').textContent = ratioBeneficeCout.toFixed(2);
+                
+                // Afficher la répartition de la rente
+                document.getElementById('part-etat').textContent = `${formatNumber(totalEtat)} USD (${((totalEtat / sommeTotalFlux) * 100).toFixed(2)}%)`;
+                document.getElementById('part-prive').textContent = `${formatNumber(totalPrive)} USD (${((totalPrive / sommeTotalFlux) * 100).toFixed(2)}%)`;
+                document.getElementById('ratio-repartition').textContent = ratioRepartition.toFixed(2);
+                
+                // Créer les graphiques
+                createFlowChart(annees.slice(1), fluxTresorerie.slice(1), fluxActualises.slice(1));
+                createCumulativeChart(annees, fluxCumules);
+                createDistributionChart(totalEtat, totalPrive);
+                createStateRevenueChart(sommeImpots, sommeRoyalties, participationEtatValeur);
+            }
+            
+            // Fonction pour calculer le TRI
+            function calculateIRR(cashFlows, guess = 0.1, tolerance = 0.0001, maxIterations = 1000) {
+                let rate = guess;
+                let iteration = 0;
+                
+                while (iteration < maxIterations) {
+                    let npv = 0;
+                    let derivativeNpv = 0;
+                    
+                    for (let i = 0; i < cashFlows.length; i++) {
+                        const cashFlow = cashFlows[i];
+                        const discountFactor = Math.pow(1 + rate, i);
+                        npv += cashFlow / discountFactor;
+                        
+                        if (i > 0) {
+                            derivativeNpv -= (i * cashFlow) / Math.pow(1 + rate, i + 1);
+                        }
+                    }
+                    
+                    if (Math.abs(npv) < tolerance) {
+                        return rate;
+                    }
+                    
+                    const newRate = rate - npv / derivativeNpv;
+                    
+                    if (Math.abs(newRate - rate) < tolerance) {
+                        return newRate;
+                    }
+                    
+                    rate = newRate;
+                    iteration++;
+                }
+                
+                return rate;
+            }
+            
+            // Fonction pour calculer le délai de récupération actualisé
+            function calculatePaybackPeriod(discountedCashFlows) {
+                let cumulativeCashFlow = 0;
+                let paybackPeriod = 0;
+                
+                for (let i = 0; i < discountedCashFlows.length; i++) {
+                    cumulativeCashFlow += discountedCashFlows[i];
+                    
+                    if (cumulativeCashFlow >= 0 && i > 0) {
+                        // Interpolation linéaire pour affiner le délai de récupération
+                        const previousCumulativeCashFlow = cumulativeCashFlow - discountedCashFlows[i];
+                        const fractionOfYear = -previousCumulativeCashFlow / discountedCashFlows[i];
+                        paybackPeriod = i - 1 + fractionOfYear;
+                        break;
+                    }
+                }
+                
+                return paybackPeriod;
+            }
+            
+            // Fonction pour créer le graphique des flux
+            function createFlowChart(years, cashFlows, discountedCashFlows) {
+                const ctx = document.getElementById('chart-flux').getContext('2d');
+                
+                if (window.flowChart) {
+                    window.flowChart.destroy();
+                }
+                
+                window.flowChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Flux de trésorerie',
+                                data: cashFlows,
+                                backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Flux actualisés',
+                                data: discountedCashFlows,
+                                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Années'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'USD'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Fonction pour créer le graphique des flux cumulés
+            function createCumulativeChart(years, cumulativeFlows) {
+                const ctx = document.getElementById('chart-cumule').getContext('2d');
+                
+                if (window.cumulativeChart) {
+                    window.cumulativeChart.destroy();
+                }
+                
+                window.cumulativeChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: years,
+                        datasets: [
+                            {
+                                label: 'Flux cumulés actualisés',
+                                data: cumulativeFlows,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 2,
+                                tension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Années'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'USD'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Fonction pour créer le graphique de répartition État vs Privé
+            function createDistributionChart(stateShare, privateShare) {
+                const ctx = document.getElementById('chart-repartition').getContext('2d');
+                
+                if (window.distributionChart) {
+                    window.distributionChart.destroy();
+                }
+                
+                window.distributionChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Part de l\'État', 'Part des actionnaires privés'],
+                        datasets: [
+                            {
+                                data: [stateShare, privateShare],
+                                backgroundColor: [
+                                    'rgba(54, 162, 235, 0.7)',
+                                    'rgba(255, 99, 132, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 99, 132, 1)'
+                                ],
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: ${formatNumber(value)} USD (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Fonction pour créer le graphique détaillé des revenus de l'État
+            function createStateRevenueChart(taxes, royalties, participation) {
+                const ctx = document.getElementById('chart-detail-etat').getContext('2d');
+                
+                if (window.stateRevenueChart) {
+                    window.stateRevenueChart.destroy();
+                }
+                
+                window.stateRevenueChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Impôts', 'Royalties', 'Participation de l\'État'],
+                        datasets: [
+                            {
+                                data: [taxes, royalties, participation],
+                                backgroundColor: [
+                                    'rgba(75, 192, 192, 0.7)',
+                                    'rgba(153, 102, 255, 0.7)',
+                                    'rgba(255, 159, 64, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / total) * 100);
+                                        return `${label}: ${formatNumber(value)} USD (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Fonction pour formater les nombres
+            function formatNumber(num) {
+                if (isNaN(num)) return '-';
+                return new Intl.NumberFormat('fr-FR').format(Math.round(num));
+            }
+        });
+    </script>
+</body>
+</html>
